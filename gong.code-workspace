@@ -9,7 +9,15 @@
         
     },
     "launch": {
-        "configurations": [],
+        "configurations": [
+            {
+                "name": "Launch gong",
+                "type": "go",
+                "request": "launch",
+                "mode": "debug",
+                "program": "${workspaceFolder:gong}/main.go"
+            }
+        ],
         "compounds": []
     },
     "tasks": {
