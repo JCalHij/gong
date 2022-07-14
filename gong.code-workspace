@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+            "name": "gong",
+			"path": "."
+		}
+    ],
+    "settings": {
+        
+    },
+    "launch": {
+        "configurations": [],
+        "compounds": []
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": []
+    }
+}
