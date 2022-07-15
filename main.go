@@ -23,112 +23,135 @@ func vec2_from_angle(angle float64) rl.Vector2 {
 	return rl.Vector2Normalize(v)
 }
 
+func idle_game_update(GS *GameState, DeltaTime float32) {
+
+}
+
+func playing_game_update(GS *GameState, DeltaTime float32) {
+
+	/* Player movement */
+	{
+		if rl.IsKeyDown(rl.KeyW) {
+			GS.LeftPaddle.Y -= PaddleSpeed * DeltaTime
+		}
+		if rl.IsKeyDown(rl.KeyS) {
+			GS.LeftPaddle.Y += PaddleSpeed * DeltaTime
+		}
+	}
+
+	/* Enemy movement */
+	{
+		var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y - GS.RightPaddle.Height/2)
+		if YError > 0 {
+			GS.RightPaddle.Y += PaddleSpeed * DeltaTime
+
+		} else {
+			GS.RightPaddle.Y -= PaddleSpeed * DeltaTime
+		}
+	}
+
+	/* Ball movement */
+	{
+		var BallPos rl.Vector2 = rl.Vector2{X: GS.Ball.X, Y: GS.Ball.Y}
+		var BallDeltaMovement rl.Vector2 = rl.Vector2{
+			X: BallSpeed * GS.BallDirection.X * DeltaTime,
+			Y: BallSpeed * GS.BallDirection.Y * DeltaTime}
+		var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
+
+		// Collision checks
+		// Window limits
+		if BallNewPos.X+BallWidth >= float32(WindowWidth) || BallNewPos.X <= 0.0 {
+			GS.BallDirection.X *= -1
+		}
+		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
+			GS.BallDirection.Y *= -1
+		}
+
+		// Left paddle
+		var NewBallRect rl.Rectangle = rl.Rectangle{
+			X:      BallNewPos.X,
+			Y:      BallNewPos.Y,
+			Width:  GS.Ball.Width,
+			Height: GS.Ball.Height}
+
+		if rl.CheckCollisionRecs(GS.LeftPaddle, NewBallRect) {
+			GS.BallDirection.X *= -1
+		}
+		// Right paddle
+		if rl.CheckCollisionRecs(GS.RightPaddle, NewBallRect) {
+			GS.BallDirection.X *= -1
+		}
+
+		GS.Ball.X += BallSpeed * GS.BallDirection.X * DeltaTime
+		GS.Ball.Y += BallSpeed * GS.BallDirection.Y * DeltaTime
+	}
+
+}
+
+func finished_game_update(GS *GameState, DeltaTime float32) {
+
+}
+
 const PaddleWidth = 15
 const PaddleHeight = 75
 const BallWidth = 25
 const BallHeight = 25
 const ScoreFontSize = 85
 const TextScoreSpacing = 30
+const WindowWidth int32 = 1200
+const WindowHeight int32 = 600
+const PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
+const BallSpeed float32 = float32(WindowWidth) * 0.4
+
+type GameState struct {
+	LeftPaddle  rl.Rectangle
+	RightPaddle rl.Rectangle
+	Ball        rl.Rectangle
+
+	BallDirection rl.Vector2
+
+	LeftScore  int32
+	RightScore int32
+}
+
+func init_game() GameState {
+	return GameState{
+		LeftPaddle: rl.Rectangle{
+			X:      20 + PaddleWidth,
+			Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+			Width:  PaddleWidth,
+			Height: PaddleHeight},
+
+		RightPaddle: rl.Rectangle{
+			X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
+			Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+			Width:  PaddleWidth,
+			Height: PaddleHeight},
+
+		Ball: rl.Rectangle{
+			X:      float32(WindowWidth-BallWidth) / 2.0,
+			Y:      float32(WindowHeight-BallHeight) / 2.0,
+			Width:  BallWidth,
+			Height: BallHeight},
+
+		BallDirection: vec2_from_angle(rand.Float64()),
+
+		LeftScore:  0,
+		RightScore: 0}
+}
 
 func main() {
-	var WindowWidth int32 = 1200
-	var WindowHeight int32 = 600
-
-	var PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
-	var BallSpeed float32 = float32(WindowWidth) * 0.4
-
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
 	//rl.SetTargetFPS(60)
 
-	LeftPaddle := rl.Rectangle{
-		X:      20 + PaddleWidth,
-		Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-		Width:  PaddleWidth,
-		Height: PaddleHeight}
-	var LeftScore = 0
-
-	RightPaddle := rl.Rectangle{
-		X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
-		Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-		Width:  PaddleWidth,
-		Height: PaddleHeight}
-	var RightScore = 0
-
-	Ball := rl.Rectangle{
-		X:      float32(WindowWidth-BallWidth) / 2.0,
-		Y:      float32(WindowHeight-BallHeight) / 2.0,
-		Width:  BallWidth,
-		Height: BallHeight}
-
-	var BallDirection rl.Vector2 = vec2_from_angle(rand.Float64())
+	var GS GameState = init_game()
 
 	for !rl.WindowShouldClose() {
 		var DeltaTime float32 = rl.GetFrameTime() // [s] frame time
 
 		/* Game Logic */
-
-		RightScoreText := fmt.Sprintf("%d", RightScore)
-		var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
-
-		LeftScoreText := fmt.Sprintf("%d", LeftScore)
-
-		/* Player movement */
-		{
-			if rl.IsKeyDown(rl.KeyW) {
-				LeftPaddle.Y -= PaddleSpeed * DeltaTime
-			}
-			if rl.IsKeyDown(rl.KeyS) {
-				LeftPaddle.Y += PaddleSpeed * DeltaTime
-			}
-		}
-
-		/* Enemy movement */
-		{
-			var YError float32 = (Ball.Y + Ball.Height/2) - (RightPaddle.Y - RightPaddle.Height/2)
-			if YError > 0 {
-				RightPaddle.Y += PaddleSpeed * DeltaTime
-
-			} else {
-				RightPaddle.Y -= PaddleSpeed * DeltaTime
-			}
-		}
-
-		/* Ball movement */
-		{
-			var BallPos rl.Vector2 = rl.Vector2{X: Ball.X, Y: Ball.Y}
-			var BallDeltaMovement rl.Vector2 = rl.Vector2{
-				X: BallSpeed * BallDirection.X * DeltaTime,
-				Y: BallSpeed * BallDirection.Y * DeltaTime}
-			var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
-
-			// Collision checks
-			// Window limits
-			if BallNewPos.X+BallWidth >= float32(WindowWidth) || BallNewPos.X <= 0.0 {
-				BallDirection.X *= -1
-			}
-			if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
-				BallDirection.Y *= -1
-			}
-
-			// Left paddle
-			var NewBallRect rl.Rectangle = rl.Rectangle{
-				X:      BallNewPos.X,
-				Y:      BallNewPos.Y,
-				Width:  Ball.Width,
-				Height: Ball.Height}
-
-			if rl.CheckCollisionRecs(LeftPaddle, NewBallRect) {
-				BallDirection.X *= -1
-			}
-			// Right paddle
-			if rl.CheckCollisionRecs(RightPaddle, NewBallRect) {
-				BallDirection.X *= -1
-			}
-
-			Ball.X += BallSpeed * BallDirection.X * DeltaTime
-			Ball.Y += BallSpeed * BallDirection.Y * DeltaTime
-		}
+		playing_game_update(&GS, DeltaTime)
 
 		/* Rendering */
 		{
@@ -136,14 +159,20 @@ func main() {
 			rl.ClearBackground(rl.Black)
 
 			// Paddles
-			draw_rect(&LeftPaddle, rl.White)
-			draw_rect(&RightPaddle, rl.White)
+			draw_rect(&GS.LeftPaddle, rl.White)
+			draw_rect(&GS.RightPaddle, rl.White)
 			// Ball
-			draw_rect(&Ball, rl.White)
+			draw_rect(&GS.Ball, rl.White)
 
 			// Score
-			rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
-			rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+			{
+				RightScoreText := fmt.Sprintf("%d", GS.RightScore)
+				var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
+
+				LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
+				rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
+				rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+			}
 
 			// Debug performance
 			rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
