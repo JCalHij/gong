@@ -24,7 +24,7 @@ func main() {
 
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
-	rl.SetTargetFPS(60)
+	//rl.SetTargetFPS(60)
 
 	LeftPaddle := rl.Rectangle{
 		X:      20 + PaddleWidth,
@@ -46,7 +46,11 @@ func main() {
 		Width:  BallWidth,
 		Height: BallHeight}
 
+	var DeltaTime float32 = 0.0
+
 	for !rl.WindowShouldClose() {
+		DeltaTime = rl.GetFrameTime()
+
 		/* Game Logic */
 
 		RightScoreText := fmt.Sprintf("%d", RightScore)
@@ -59,11 +63,6 @@ func main() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
 
-		// Vertical line
-		rl.DrawLine(WindowWidth/2, 0, WindowWidth/2, WindowHeight, rl.White)
-		// Horizontal line
-		rl.DrawLine(0, WindowHeight/2, WindowWidth, WindowHeight/2, rl.White)
-
 		// Paddles
 		draw_rect(&LeftPaddle, rl.White)
 		draw_rect(&RightPaddle, rl.White)
@@ -71,9 +70,11 @@ func main() {
 		draw_rect(&Ball, rl.White)
 
 		// Score
-
 		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
 		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+
+		// Debug performance
+		rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.White)
 
 		rl.EndDrawing()
 	}
