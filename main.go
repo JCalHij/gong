@@ -1,18 +1,79 @@
 package main
 
+import "fmt"
 import "github.com/gen2brain/raylib-go/raylib"
 
+func draw_rect(rect *rl.Rectangle, color rl.Color) {
+	var x int32 = int32(rect.X)
+	var y int32 = int32(rect.Y)
+	var w int32 = int32(rect.Width)
+	var h int32 = int32(rect.Height)
+	rl.DrawRectangle(x, y, w, h, color)
+}
+
+const PaddleWidth = 30
+const PaddleHeight = 75
+const BallWidth = 25
+const BallHeight = 25
+const ScoreFontSize = 85
+const TextScoreSpacing = 30
+
 func main() {
-	rl.InitWindow(800, 450, "raylib [core] example - basic window")
+	var WindowWidth int32 = 1200
+	var WindowHeight int32 = 600
+
+	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
 	rl.SetTargetFPS(60)
 
+	LeftPaddle := rl.Rectangle{
+		X:      20 + PaddleWidth,
+		Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+		Width:  PaddleWidth,
+		Height: PaddleHeight}
+	var LeftScore = 0
+
+	RightPaddle := rl.Rectangle{
+		X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
+		Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+		Width:  PaddleWidth,
+		Height: PaddleHeight}
+	var RightScore = 0
+
+	Ball := rl.Rectangle{
+		X:      float32(WindowWidth-BallWidth) / 2.0,
+		Y:      float32(WindowHeight-BallHeight) / 2.0,
+		Width:  BallWidth,
+		Height: BallHeight}
+
 	for !rl.WindowShouldClose() {
+		/* Game Logic */
+
+		RightScoreText := fmt.Sprintf("%d", RightScore)
+		var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
+
+		LeftScoreText := fmt.Sprintf("%d", LeftScore)
+
+		/* Rendering */
+
 		rl.BeginDrawing()
+		rl.ClearBackground(rl.Black)
 
-		rl.ClearBackground(rl.RayWhite)
+		// Vertical line
+		rl.DrawLine(WindowWidth/2, 0, WindowWidth/2, WindowHeight, rl.White)
+		// Horizontal line
+		rl.DrawLine(0, WindowHeight/2, WindowWidth, WindowHeight/2, rl.White)
 
-		rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.LightGray)
+		// Paddles
+		draw_rect(&LeftPaddle, rl.White)
+		draw_rect(&RightPaddle, rl.White)
+		// Ball
+		draw_rect(&Ball, rl.White)
+
+		// Score
+
+		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
+		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
 
 		rl.EndDrawing()
 	}
