@@ -11,6 +11,7 @@ import (
 /* Definitions, Constants */
 
 type UpdateFunction func(*GameState, float32)
+type RenderFunction func(*GameState)
 
 type GameState struct {
 	LeftPaddle  rl.Rectangle
@@ -23,6 +24,7 @@ type GameState struct {
 	RightScore int32
 
 	Update UpdateFunction
+	Render RenderFunction
 }
 
 const PaddleWidth = 15
@@ -35,6 +37,7 @@ const WindowWidth int32 = 1200
 const WindowHeight int32 = 600
 const PaddleSpeed float32 = float32(WindowHeight) * 0.35 // [px/s] Paddle speed as a percentage of the screen height
 const BallSpeed float32 = float32(WindowWidth) * 0.45
+const GameWonScore int32 = 1
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
 	X:      20 + PaddleWidth,
@@ -59,6 +62,7 @@ var InitialBall = rl.Rectangle{
 func idle_game_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeySpace) {
 		GS.Update = playing_game_update
+		GS.Render = playing_game_render
 	}
 }
 
@@ -101,23 +105,27 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			// Ball touched right side of the screen. Point for the left side.
 			GS.LeftScore += 1
 			reset_positions(GS)
-			if GS.LeftScore >= 10 {
+			if GS.LeftScore >= GameWonScore {
 				// Reached maximum points, you win
 				GS.Update = finished_game_update
+				GS.Render = finished_game_render
 			} else {
 				// Not yet finished, keep playing
 				GS.Update = idle_game_update
+				GS.Render = idle_game_render
 			}
 		} else if BallNewPos.X <= 0.0 {
 			// Ball touched left side of the screen. Point for the right side.
 			GS.RightScore += 1
 			reset_positions(GS)
-			if GS.RightScore >= 10 {
+			if GS.RightScore >= GameWonScore {
 				// Reached maximum points, you win
 				GS.Update = finished_game_update
+				GS.Render = finished_game_render
 			} else {
 				// Not yet finished, keep playing
 				GS.Update = idle_game_update
+				GS.Render = idle_game_render
 			}
 		}
 
@@ -146,7 +154,22 @@ func finished_game_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeySpace) {
 		*GS = init_game()
 		GS.Update = idle_game_update
+		GS.Render = idle_game_render
 	}
+}
+
+/* Specific rendering functions */
+
+func idle_game_render(GS *GameState) {
+	rl.DrawText("This is the text for the idle phase", 50, 50, 50, rl.White)
+}
+
+func playing_game_render(GS *GameState) {
+
+}
+
+func finished_game_render(GS *GameState) {
+	rl.DrawText("This is the text for the finished phase", 50, 50, 50, rl.White)
 }
 
 /* Game state updates */
@@ -159,7 +182,8 @@ func init_game() GameState {
 		BallDirection: vec2_from_angle(rand.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
-		Update:        idle_game_update}
+		Update:        idle_game_update,
+		Render:        idle_game_render}
 }
 
 func reset_positions(GS *GameState) {
@@ -204,6 +228,8 @@ func main() {
 				rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
 				rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
 			}
+
+			GS.Render(&GS)
 
 			// Debug performance
 			rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
