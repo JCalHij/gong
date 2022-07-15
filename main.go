@@ -37,7 +37,7 @@ const WindowWidth int32 = 1200
 const WindowHeight int32 = 600
 const PaddleSpeed float32 = float32(WindowHeight) * 0.35 // [px/s] Paddle speed as a percentage of the screen height
 const BallSpeed float32 = float32(WindowWidth) * 0.45
-const GameWonScore int32 = 1
+const GameWonScore int32 = 5
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
 	X:      20 + PaddleWidth,
@@ -95,6 +95,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			Y: BallSpeed * GS.BallDirection.Y * DeltaTime}
 		var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
 
+		//TODO[javi]: Handle weird side collisions
 		// Collision checks
 		//Top & Bottom Window limits
 		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
@@ -187,7 +188,6 @@ func finished_game_render(GS *GameState) {
 			TextWidth := rl.MeasureText(LoseText, ResultFontSize)
 			rl.DrawText(LoseText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
 		}
-
 	}
 	// Instructions
 	{
@@ -222,6 +222,7 @@ func reset_positions(GS *GameState) {
 /* Entry Point */
 
 func main() {
+	//TODO[javi]: RNG
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
 	//rl.SetTargetFPS(60)
