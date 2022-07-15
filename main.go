@@ -57,11 +57,12 @@ var InitialBall = rl.Rectangle{
 /* Update functions */
 
 func idle_game_update(GS *GameState, DeltaTime float32) {
-
+	if rl.IsKeyPressed(rl.KeySpace) {
+		GS.Update = playing_game_update
+	}
 }
 
 func playing_game_update(GS *GameState, DeltaTime float32) {
-
 	/* Player movement */
 	{
 		if rl.IsKeyDown(rl.KeyW) {
@@ -77,7 +78,6 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 		var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y - GS.RightPaddle.Height/2)
 		if YError > 0 {
 			GS.RightPaddle.Y += PaddleSpeed * DeltaTime
-
 		} else {
 			GS.RightPaddle.Y -= PaddleSpeed * DeltaTime
 		}
@@ -92,12 +92,33 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 		var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
 
 		// Collision checks
-		// Window limits
-		if BallNewPos.X+BallWidth >= float32(WindowWidth) || BallNewPos.X <= 0.0 {
-			GS.BallDirection.X *= -1
-		}
+		//Top & Bottom Window limits
 		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
 			GS.BallDirection.Y *= -1
+		}
+		// Left and right limits
+		if BallNewPos.X+BallWidth >= float32(WindowWidth) {
+			// Ball touched right side of the screen. Point for the left side.
+			GS.LeftScore += 1
+			reset_positions(GS)
+			if GS.LeftScore >= 10 {
+				// Reached maximum points, you win
+				GS.Update = finished_game_update
+			} else {
+				// Not yet finished, keep playing
+				GS.Update = idle_game_update
+			}
+		} else if BallNewPos.X <= 0.0 {
+			// Ball touched left side of the screen. Point for the right side.
+			GS.RightScore += 1
+			reset_positions(GS)
+			if GS.RightScore >= 10 {
+				// Reached maximum points, you win
+				GS.Update = finished_game_update
+			} else {
+				// Not yet finished, keep playing
+				GS.Update = idle_game_update
+			}
 		}
 
 		// Left paddle
@@ -122,7 +143,10 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 }
 
 func finished_game_update(GS *GameState, DeltaTime float32) {
-
+	if rl.IsKeyPressed(rl.KeySpace) {
+		*GS = init_game()
+		GS.Update = idle_game_update
+	}
 }
 
 /* Game state updates */
@@ -135,7 +159,7 @@ func init_game() GameState {
 		BallDirection: vec2_from_angle(rand.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
-		Update:        playing_game_update}
+		Update:        idle_game_update}
 }
 
 func reset_positions(GS *GameState) {
