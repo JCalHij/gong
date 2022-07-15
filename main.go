@@ -33,8 +33,8 @@ const ScoreFontSize = 85
 const TextScoreSpacing = 30
 const WindowWidth int32 = 1200
 const WindowHeight int32 = 600
-const PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
-const BallSpeed float32 = float32(WindowWidth) * 0.4
+const PaddleSpeed float32 = float32(WindowHeight) * 0.35 // [px/s] Paddle speed as a percentage of the screen height
+const BallSpeed float32 = float32(WindowWidth) * 0.45
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
 	X:      20 + PaddleWidth,
@@ -75,7 +75,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 
 	/* Enemy movement */
 	{
-		var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y - GS.RightPaddle.Height/2)
+		var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y + GS.RightPaddle.Height/2)
 		if YError > 0 {
 			GS.RightPaddle.Y += PaddleSpeed * DeltaTime
 		} else {
