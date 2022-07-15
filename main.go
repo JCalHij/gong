@@ -8,22 +8,53 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-func draw_rect(rect *rl.Rectangle, color rl.Color) {
-	var x int32 = int32(rect.X)
-	var y int32 = int32(rect.Y)
-	var w int32 = int32(rect.Width)
-	var h int32 = int32(rect.Height)
-	rl.DrawRectangle(x, y, w, h, color)
-}
-
-func vec2_from_angle(angle float64) rl.Vector2 {
-	v := rl.Vector2{
-		X: float32(math.Cos(angle)),
-		Y: float32(math.Sin(angle))}
-	return rl.Vector2Normalize(v)
-}
+/* Definitions, Constants */
 
 type UpdateFunction func(*GameState, float32)
+
+type GameState struct {
+	LeftPaddle  rl.Rectangle
+	RightPaddle rl.Rectangle
+	Ball        rl.Rectangle
+
+	BallDirection rl.Vector2
+
+	LeftScore  int32
+	RightScore int32
+
+	Update UpdateFunction
+}
+
+const PaddleWidth = 15
+const PaddleHeight = 75
+const BallWidth = 25
+const BallHeight = 25
+const ScoreFontSize = 85
+const TextScoreSpacing = 30
+const WindowWidth int32 = 1200
+const WindowHeight int32 = 600
+const PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
+const BallSpeed float32 = float32(WindowWidth) * 0.4
+
+var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
+	X:      20 + PaddleWidth,
+	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+	Width:  PaddleWidth,
+	Height: PaddleHeight}
+
+var InitialRightPaddle rl.Rectangle = rl.Rectangle{
+	X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
+	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+	Width:  PaddleWidth,
+	Height: PaddleHeight}
+
+var InitialBall = rl.Rectangle{
+	X:      float32(WindowWidth-BallWidth) / 2.0,
+	Y:      float32(WindowHeight-BallHeight) / 2.0,
+	Width:  BallWidth,
+	Height: BallHeight}
+
+/* Update functions */
 
 func idle_game_update(GS *GameState, DeltaTime float32) {
 
@@ -94,47 +125,7 @@ func finished_game_update(GS *GameState, DeltaTime float32) {
 
 }
 
-const PaddleWidth = 15
-const PaddleHeight = 75
-const BallWidth = 25
-const BallHeight = 25
-const ScoreFontSize = 85
-const TextScoreSpacing = 30
-const WindowWidth int32 = 1200
-const WindowHeight int32 = 600
-const PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
-const BallSpeed float32 = float32(WindowWidth) * 0.4
-
-var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
-	X:      20 + PaddleWidth,
-	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-	Width:  PaddleWidth,
-	Height: PaddleHeight}
-
-var InitialRightPaddle rl.Rectangle = rl.Rectangle{
-	X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
-	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-	Width:  PaddleWidth,
-	Height: PaddleHeight}
-
-var InitialBall = rl.Rectangle{
-	X:      float32(WindowWidth-BallWidth) / 2.0,
-	Y:      float32(WindowHeight-BallHeight) / 2.0,
-	Width:  BallWidth,
-	Height: BallHeight}
-
-type GameState struct {
-	LeftPaddle  rl.Rectangle
-	RightPaddle rl.Rectangle
-	Ball        rl.Rectangle
-
-	BallDirection rl.Vector2
-
-	LeftScore  int32
-	RightScore int32
-
-	Update UpdateFunction
-}
+/* Game state updates */
 
 func init_game() GameState {
 	return GameState{
@@ -153,6 +144,8 @@ func reset_positions(GS *GameState) {
 	GS.Ball = InitialBall
 	GS.BallDirection = vec2_from_angle(rand.Float64())
 }
+
+/* Entry Point */
 
 func main() {
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
@@ -196,4 +189,21 @@ func main() {
 	}
 
 	rl.CloseWindow()
+}
+
+/* Tools */
+
+func draw_rect(rect *rl.Rectangle, color rl.Color) {
+	var x int32 = int32(rect.X)
+	var y int32 = int32(rect.Y)
+	var w int32 = int32(rect.Width)
+	var h int32 = int32(rect.Height)
+	rl.DrawRectangle(x, y, w, h, color)
+}
+
+func vec2_from_angle(angle float64) rl.Vector2 {
+	v := rl.Vector2{
+		X: float32(math.Cos(angle)),
+		Y: float32(math.Sin(angle))}
+	return rl.Vector2Normalize(v)
 }
