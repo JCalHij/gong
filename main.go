@@ -23,7 +23,7 @@ func vec2_from_angle(angle float64) rl.Vector2 {
 	return rl.Vector2Normalize(v)
 }
 
-const PaddleWidth = 30
+const PaddleWidth = 15
 const PaddleHeight = 75
 const BallWidth = 25
 const BallHeight = 25
@@ -35,7 +35,7 @@ func main() {
 	var WindowHeight int32 = 600
 
 	var PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
-	var BallSpeed float32 = float32(WindowWidth) * 0.2
+	var BallSpeed float32 = float32(WindowWidth) * 0.4
 
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
@@ -103,6 +103,21 @@ func main() {
 			}
 			if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
 				BallDirection.Y *= -1
+			}
+
+			// Left paddle
+			var NewBallRect rl.Rectangle = rl.Rectangle{
+				X:      BallNewPos.X,
+				Y:      BallNewPos.Y,
+				Width:  Ball.Width,
+				Height: Ball.Height}
+
+			if rl.CheckCollisionRecs(LeftPaddle, NewBallRect) {
+				BallDirection.X *= -1
+			}
+			// Right paddle
+			if rl.CheckCollisionRecs(RightPaddle, NewBallRect) {
+				BallDirection.X *= -1
 			}
 
 			Ball.X += BallSpeed * BallDirection.X * DeltaTime
