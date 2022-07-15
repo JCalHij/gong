@@ -85,7 +85,13 @@ func main() {
 
 		/* Enemy movement */
 		{
-			//TODO
+			var YError float32 = (Ball.Y + Ball.Height/2) - (RightPaddle.Y - RightPaddle.Height/2)
+			if YError > 0 {
+				RightPaddle.Y += PaddleSpeed * DeltaTime
+
+			} else {
+				RightPaddle.Y -= PaddleSpeed * DeltaTime
+			}
 		}
 
 		/* Ball movement */
