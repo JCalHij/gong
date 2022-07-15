@@ -23,6 +23,8 @@ func vec2_from_angle(angle float64) rl.Vector2 {
 	return rl.Vector2Normalize(v)
 }
 
+type UpdateFunction func(*GameState, float32)
+
 func idle_game_update(GS *GameState, DeltaTime float32) {
 
 }
@@ -103,6 +105,24 @@ const WindowHeight int32 = 600
 const PaddleSpeed float32 = float32(WindowHeight) * 0.3 // [px/s] Paddle speed as a percentage of the screen height
 const BallSpeed float32 = float32(WindowWidth) * 0.4
 
+var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
+	X:      20 + PaddleWidth,
+	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+	Width:  PaddleWidth,
+	Height: PaddleHeight}
+
+var InitialRightPaddle rl.Rectangle = rl.Rectangle{
+	X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
+	Y:      float32(WindowHeight-PaddleHeight) / 2.0,
+	Width:  PaddleWidth,
+	Height: PaddleHeight}
+
+var InitialBall = rl.Rectangle{
+	X:      float32(WindowWidth-BallWidth) / 2.0,
+	Y:      float32(WindowHeight-BallHeight) / 2.0,
+	Width:  BallWidth,
+	Height: BallHeight}
+
 type GameState struct {
 	LeftPaddle  rl.Rectangle
 	RightPaddle rl.Rectangle
@@ -112,32 +132,26 @@ type GameState struct {
 
 	LeftScore  int32
 	RightScore int32
+
+	Update UpdateFunction
 }
 
 func init_game() GameState {
 	return GameState{
-		LeftPaddle: rl.Rectangle{
-			X:      20 + PaddleWidth,
-			Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-			Width:  PaddleWidth,
-			Height: PaddleHeight},
-
-		RightPaddle: rl.Rectangle{
-			X:      float32(WindowWidth) - 20 - 2*PaddleWidth,
-			Y:      float32(WindowHeight-PaddleHeight) / 2.0,
-			Width:  PaddleWidth,
-			Height: PaddleHeight},
-
-		Ball: rl.Rectangle{
-			X:      float32(WindowWidth-BallWidth) / 2.0,
-			Y:      float32(WindowHeight-BallHeight) / 2.0,
-			Width:  BallWidth,
-			Height: BallHeight},
-
+		LeftPaddle:    InitialLeftPaddle,
+		RightPaddle:   InitialRightPaddle,
+		Ball:          InitialBall,
 		BallDirection: vec2_from_angle(rand.Float64()),
+		LeftScore:     0,
+		RightScore:    0,
+		Update:        playing_game_update}
+}
 
-		LeftScore:  0,
-		RightScore: 0}
+func reset_positions(GS *GameState) {
+	GS.LeftPaddle = InitialLeftPaddle
+	GS.RightPaddle = InitialRightPaddle
+	GS.Ball = InitialBall
+	GS.BallDirection = vec2_from_angle(rand.Float64())
 }
 
 func main() {
@@ -151,7 +165,7 @@ func main() {
 		var DeltaTime float32 = rl.GetFrameTime() // [s] frame time
 
 		/* Game Logic */
-		playing_game_update(&GS, DeltaTime)
+		GS.Update(&GS, DeltaTime)
 
 		/* Rendering */
 		{
