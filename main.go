@@ -7,8 +7,6 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: sound effects
-
 /* Game state updates */
 
 func init_game() GameState {
