@@ -66,8 +66,10 @@ func main() {
 
 			GS.Render(&GS)
 
-			// Debug performance
-			// rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
+			// Debugging
+			//rl.DrawLine(0, WindowHeight/2, WindowWidth, WindowHeight/2, rl.Gray)
+			//rl.DrawLine(WindowWidth/2, 0, WindowWidth/2, WindowHeight, rl.Gray)
+			//rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
 
 			rl.EndDrawing()
 		}
