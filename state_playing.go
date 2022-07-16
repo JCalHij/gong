@@ -8,25 +8,10 @@ import (
 )
 
 func playing_game_update(GS *GameState, DeltaTime float32) {
-	/* Player movement */
-	{
-		if rl.IsKeyDown(rl.KeyW) {
-			GS.LeftPaddle.Y -= PaddleSpeed * DeltaTime
-		}
-		if rl.IsKeyDown(rl.KeyS) {
-			GS.LeftPaddle.Y += PaddleSpeed * DeltaTime
-		}
-	}
+	/* Input from playerAI */
 
-	/* Enemy movement */
-	{
-		var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y + GS.RightPaddle.Height/2)
-		if YError > 0 {
-			GS.RightPaddle.Y += PaddleSpeed * DeltaTime
-		} else {
-			GS.RightPaddle.Y -= PaddleSpeed * DeltaTime
-		}
-	}
+	GS.LeftInput(GS, DeltaTime)
+	GS.RightInput(GS, DeltaTime)
 
 	/* Ball movement */
 	{
@@ -142,5 +127,32 @@ func playing_game_render(GS *GameState) {
 		LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
 		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
 		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+	}
+}
+
+func left_player_input(GS *GameState, DeltaTime float32) {
+	if rl.IsKeyDown(rl.KeyW) {
+		GS.LeftPaddle.Y -= PaddleSpeed * DeltaTime
+	}
+	if rl.IsKeyDown(rl.KeyS) {
+		GS.LeftPaddle.Y += PaddleSpeed * DeltaTime
+	}
+}
+
+func right_player_input(GS *GameState, DeltaTime float32) {
+	if rl.IsKeyDown(rl.KeyUp) {
+		GS.RightPaddle.Y -= PaddleSpeed * DeltaTime
+	}
+	if rl.IsKeyDown(rl.KeyDown) {
+		GS.RightPaddle.Y += PaddleSpeed * DeltaTime
+	}
+}
+
+func right_ai_input(GS *GameState, DeltaTime float32) {
+	var YError float32 = (GS.Ball.Y + GS.Ball.Height/2) - (GS.RightPaddle.Y + GS.RightPaddle.Height/2)
+	if YError > 0 {
+		GS.RightPaddle.Y += PaddleSpeed * DeltaTime
+	} else {
+		GS.RightPaddle.Y -= PaddleSpeed * DeltaTime
 	}
 }
