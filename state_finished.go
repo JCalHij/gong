@@ -23,14 +23,28 @@ func finished_game_render(GS *GameState) {
 		const ResultFontSize = 70
 		const WinText string = "You WON!"
 		const LoseText string = "You LOST!"
+		const LeftPlayerWonText string = "Left player WON!"
+		const RightPlayerWonText string = "Right player WON!"
 		if GS.LeftScore > GS.RightScore {
-			// Player won
-			TextWidth := rl.MeasureText(WinText, ResultFontSize)
-			rl.DrawText(WinText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			if GS.RightPlayerHuman {
+				// Left player won
+				TextWidth := rl.MeasureText(LeftPlayerWonText, ResultFontSize)
+				rl.DrawText(LeftPlayerWonText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			} else {
+				// Player won
+				TextWidth := rl.MeasureText(WinText, ResultFontSize)
+				rl.DrawText(WinText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			}
 		} else {
-			// Enemy won
-			TextWidth := rl.MeasureText(LoseText, ResultFontSize)
-			rl.DrawText(LoseText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			if GS.RightPlayerHuman {
+				// Right player won
+				TextWidth := rl.MeasureText(RightPlayerWonText, ResultFontSize)
+				rl.DrawText(RightPlayerWonText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			} else {
+				// Enemy won
+				TextWidth := rl.MeasureText(LoseText, ResultFontSize)
+				rl.DrawText(LoseText, (WindowWidth-TextWidth)/2, int32(float32(WindowHeight)*0.25), ResultFontSize, rl.White)
+			}
 		}
 	}
 	// Instructions
