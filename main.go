@@ -7,7 +7,6 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: "Main menu" -> PvP, PvAI or Quit
 //TODO[javi]: In-game pause menu -> Continue, Main Menu, Quit
 //TODO[javi]: PvP / PvAI
 
