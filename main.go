@@ -15,15 +15,18 @@ import (
 
 func init_game() GameState {
 	return GameState{
+		Update:  menu_update,
+		Render:  menu_render,
+		Running: true,
+
 		LeftPaddle:    InitialLeftPaddle,
 		RightPaddle:   InitialRightPaddle,
 		Ball:          InitialBall,
 		BallDirection: vec2_from_angle(Random.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
-		Update:        menu_update,
-		Render:        menu_render,
-		Running:       true,
+		LeftInput:     left_player_input,
+		RightInput:    right_ai_input,
 
 		SelectedOption: 0,
 		MenuOptions: [3]MenuOptionData{

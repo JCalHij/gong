@@ -9,6 +9,8 @@ import (
 type UpdateFunction func(*GameState, float32)
 type RenderFunction func(*GameState)
 
+type InputFunction func(*GameState, float32)
+
 type OptionSelectedCallback func(*GameState)
 
 type MenuOptionData struct {
@@ -29,6 +31,9 @@ type GameState struct {
 	LeftPaddle  rl.Rectangle
 	RightPaddle rl.Rectangle
 	Ball        rl.Rectangle
+
+	LeftInput  InputFunction
+	RightInput InputFunction
 
 	BallDirection rl.Vector2
 
