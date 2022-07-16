@@ -59,6 +59,21 @@ func change_to_finished(GS *GameState) {
 }
 
 func change_to_menu(GS *GameState) {
+	GS.SelectedOption = 0
 	GS.Update = menu_update
 	GS.Render = menu_render
+}
+
+func restart_game(GS *GameState) {
+	reset_positions(GS)
+	GS.LeftScore = 0
+	GS.RightScore = 0
+	change_to_idle(GS)
+}
+
+func reset_positions(GS *GameState) {
+	GS.LeftPaddle = InitialLeftPaddle
+	GS.RightPaddle = InitialRightPaddle
+	GS.Ball = InitialBall
+	GS.BallDirection = vec2_from_angle(Random.Float64())
 }

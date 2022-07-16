@@ -33,19 +33,13 @@ func init_game() GameState {
 		}}
 }
 
-func reset_positions(GS *GameState) {
-	GS.LeftPaddle = InitialLeftPaddle
-	GS.RightPaddle = InitialRightPaddle
-	GS.Ball = InitialBall
-	GS.BallDirection = vec2_from_angle(Random.Float64())
-}
-
 /* Entry Point */
 
 func main() {
 	var RandSource = rand.NewSource(time.Now().UnixNano())
 	Random = rand.New(RandSource)
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
+	rl.SetExitKey(0)
 
 	//rl.SetTargetFPS(60)
 	var GS GameState = init_game()

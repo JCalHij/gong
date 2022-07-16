@@ -17,6 +17,15 @@ type MenuOptionData struct {
 }
 
 type GameState struct {
+	// App state
+
+	Update UpdateFunction
+	Render RenderFunction
+
+	Running bool
+
+	// Main game stuff
+
 	LeftPaddle  rl.Rectangle
 	RightPaddle rl.Rectangle
 	Ball        rl.Rectangle
@@ -25,11 +34,6 @@ type GameState struct {
 
 	LeftScore  int32
 	RightScore int32
-
-	Update UpdateFunction
-	Render RenderFunction
-
-	Running bool
 
 	// Menu stuff
 
