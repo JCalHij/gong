@@ -65,6 +65,11 @@ func change_to_menu(GS *GameState) {
 	GS.Render = menu_render
 }
 
+func change_to_pause(GS *GameState) {
+	GS.Update = pause_update
+	GS.Render = pause_render
+}
+
 func restart_game(GS *GameState) {
 	reset_positions(GS)
 	GS.LeftScore = 0

@@ -7,8 +7,12 @@ import (
 )
 
 func playing_game_update(GS *GameState, DeltaTime float32) {
-	/* Input from playerAI */
+	if rl.IsKeyPressed(rl.KeyEscape) {
+		change_to_pause(GS)
+		return
+	}
 
+	/* Input from playerAI */
 	GS.LeftInput(GS, DeltaTime)
 	GS.RightInput(GS, DeltaTime)
 
