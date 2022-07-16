@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"time"
 
 	"github.com/gen2brain/raylib-go/raylib"
 )
@@ -38,6 +39,8 @@ const WindowHeight int32 = 600
 const PaddleSpeed float32 = float32(WindowHeight) * 0.35 // [px/s] Paddle speed as a percentage of the screen height
 const BallSpeed float32 = float32(WindowWidth) * 0.45
 const GameWonScore int32 = 5
+
+var Random *rand.Rand
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
 	X:      20 + PaddleWidth,
@@ -205,7 +208,7 @@ func init_game() GameState {
 		LeftPaddle:    InitialLeftPaddle,
 		RightPaddle:   InitialRightPaddle,
 		Ball:          InitialBall,
-		BallDirection: vec2_from_angle(rand.Float64()),
+		BallDirection: vec2_from_angle(Random.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
 		Update:        idle_game_update,
@@ -216,13 +219,14 @@ func reset_positions(GS *GameState) {
 	GS.LeftPaddle = InitialLeftPaddle
 	GS.RightPaddle = InitialRightPaddle
 	GS.Ball = InitialBall
-	GS.BallDirection = vec2_from_angle(rand.Float64())
+	GS.BallDirection = vec2_from_angle(Random.Float64())
 }
 
 /* Entry Point */
 
 func main() {
-	//TODO[javi]: RNG
+	var RandSource = rand.NewSource(time.Now().UnixNano())
+	Random = rand.New(RandSource)
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
 
 	//rl.SetTargetFPS(60)
