@@ -18,13 +18,13 @@ var MenuOptions [3]MenuOptionData = [3]MenuOptionData{
 }
 
 func menu_update(GS *GameState, DeltaTime float32) {
-	if rl.IsKeyPressed(rl.KeyS) {
+	if rl.IsKeyPressed(rl.KeyS) || rl.IsKeyPressed(rl.KeyDown) {
 		GS.SelectedOption += 1
 		if GS.SelectedOption >= len(MenuOptions) {
 			GS.SelectedOption = 0
 		}
 	}
-	if rl.IsKeyPressed(rl.KeyW) {
+	if rl.IsKeyPressed(rl.KeyW) || rl.IsKeyPressed(rl.KeyUp) {
 		GS.SelectedOption -= 1
 		if GS.SelectedOption < 0 {
 			GS.SelectedOption = len(MenuOptions) - 1
