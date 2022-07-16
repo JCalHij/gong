@@ -44,6 +44,14 @@ const PaddleSpeed float32 = float32(WindowHeight) * 0.35 // [px/s] Paddle speed 
 const BallSpeed float32 = float32(WindowWidth) * 0.45
 const GameWonScore int32 = 5
 
+const (
+	None            = iota
+	TopCollision    = iota
+	LeftCollision   = iota
+	BottomCollision = iota
+	RightCollision  = iota
+)
+
 var Random *rand.Rand
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
@@ -376,4 +384,26 @@ func vec2_from_angle(angle float64) rl.Vector2 {
 		X: float32(math.Cos(angle)),
 		Y: float32(math.Sin(angle))}
 	return rl.Vector2Normalize(v)
+}
+
+func rect_collision_side(Target *rl.Rectangle, Mover *rl.Rectangle) int32 {
+	var IsUpperQuadrant bool = Mover.Y+Mover.Height/2 <= Target.Y+Target.Height/2
+	var UpperBoundsCheck bool = Mover.Y+Mover.Height >= Target.Y
+	var LowerBoundsCheck bool = Mover.Y <= Target.Y+Target.Height
+	var LeftBoundsCheck bool = Mover.X+Mover.Width <= Target.X
+	var RightBoundsCheck bool = Mover.X >= Target.X+Target.Width
+
+	if UpperBoundsCheck && LowerBoundsCheck {
+		if LeftBoundsCheck {
+			return LeftCollision
+		} else if RightBoundsCheck {
+			return RightCollision
+		}
+	}
+
+	if IsUpperQuadrant {
+		return TopCollision
+	} else {
+		return BottomCollision
+	}
 }
