@@ -32,8 +32,10 @@ type GameState struct {
 	RightPaddle rl.Rectangle
 	Ball        rl.Rectangle
 
-	LeftInput  InputFunction
-	RightInput InputFunction
+	LeftInput        InputFunction
+	LeftPlayerHuman  bool
+	RightInput       InputFunction
+	RightPlayerHuman bool
 
 	BallDirection rl.Vector2
 
