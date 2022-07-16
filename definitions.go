@@ -75,7 +75,7 @@ const (
 const (
 	SFX_PaddleHit    = iota
 	SFX_WallHit      = iota
-	SF_Goal          = iota
+	SFX_Goal         = iota
 	SFX_OptionMove   = iota
 	SFX_OptionSelect = iota
 	SFX_MAX          = iota
