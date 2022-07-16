@@ -44,8 +44,8 @@ type GameState struct {
 
 	// Menu stuff
 
-	SelectedOption int
-	MenuOptions    [3]MenuOptionData
+	SelectedOption  int
+	MainMenuOptions [3]MenuOptionData
 }
 
 const PaddleWidth = 15
