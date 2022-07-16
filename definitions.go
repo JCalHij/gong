@@ -22,6 +22,8 @@ type GameState struct {
 	Update UpdateFunction
 	Render RenderFunction
 
+	Running bool
+
 	// Menu stuff
 
 	SelectedOption int

@@ -70,5 +70,5 @@ func on_player_vs_player(GS *GameState) {
 }
 
 func on_quit(GS *GameState) {
-
+	GS.Running = false
 }

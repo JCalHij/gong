@@ -23,6 +23,7 @@ func init_game() GameState {
 		RightScore:    0,
 		Update:        menu_update,
 		Render:        menu_render,
+		Running:       true,
 
 		SelectedOption: 0}
 }
@@ -44,7 +45,7 @@ func main() {
 	//rl.SetTargetFPS(60)
 	var GS GameState = init_game()
 
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && GS.Running {
 		var DeltaTime float32 = rl.GetFrameTime() // [s] frame time
 
 		/* Game Logic */
