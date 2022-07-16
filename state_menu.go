@@ -4,8 +4,21 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-func menu_update(GS *GameState, DeltaTime float32) {
+var MenuOptions [3]string = [3]string{"Player vs AI", "Player vs Player", "Quit"}
 
+func menu_update(GS *GameState, DeltaTime float32) {
+	if rl.IsKeyPressed(rl.KeyS) {
+		GS.SelectedOption += 1
+		if GS.SelectedOption >= len(MenuOptions) {
+			GS.SelectedOption = 0
+		}
+	}
+	if rl.IsKeyPressed(rl.KeyW) {
+		GS.SelectedOption -= 1
+		if GS.SelectedOption < 0 {
+			GS.SelectedOption = len(MenuOptions) - 1
+		}
+	}
 }
 
 func menu_render(GS *GameState) {
@@ -19,7 +32,6 @@ func menu_render(GS *GameState) {
 
 	// Menu options
 	{
-		var MenuOptions [3]string = [3]string{"Player vs AI", "Player vs Player", "Quit"}
 		const OptionFontSize int32 = 45
 		var YPosition int32 = WindowHeight / 2
 		const DeltaY int32 = OptionFontSize * 2
