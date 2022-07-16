@@ -66,6 +66,7 @@ func change_to_menu(GS *GameState) {
 }
 
 func change_to_pause(GS *GameState) {
+	GS.SelectedPauseMenuOption = 0
 	GS.Update = pause_update
 	GS.Render = pause_render
 }
