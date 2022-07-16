@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -18,21 +16,7 @@ func finished_game_update(GS *GameState, DeltaTime float32) {
 }
 
 func finished_game_render(GS *GameState) {
-	// Paddles
-	draw_rect(&GS.LeftPaddle, rl.White)
-	draw_rect(&GS.RightPaddle, rl.White)
-	// Ball
-	draw_rect(&GS.Ball, rl.White)
-
-	// Score
-	{
-		RightScoreText := fmt.Sprintf("%d", GS.RightScore)
-		var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
-
-		LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
-		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
-		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
-	}
+	draw_paddles_ball_and_score(GS)
 
 	// You Won / You Lost
 	{
