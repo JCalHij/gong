@@ -1,18 +1,20 @@
 # gong
 
-Pong, but in `go`.
+Pong, but in `go`. Therefore, `gong`.
 
 
 ## But why?
 
-Because I want to code, I want to finish a project and I want to learn some `go`.
+I wanted to learn some `go`, use the `raylib` library and start from scratch on coding games.
 
 
 ## Compile, Run
 
+You will probably need `go` version `1.18` to make it run, not sure how `*.mod` files actually work.
+
 ```sh
 # Simply run this
 go run main.go
-# Create a binary file
+# To create a binary file
 go build main.go
 ```
