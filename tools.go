@@ -68,7 +68,6 @@ func restart_game(GS *GameState) {
 	reset_positions(GS)
 	GS.LeftScore = 0
 	GS.RightScore = 0
-	change_to_idle(GS)
 }
 
 func reset_positions(GS *GameState) {

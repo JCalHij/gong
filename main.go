@@ -8,22 +8,26 @@ import (
 )
 
 //TODO[javi]: In-game pause menu -> Continue, Main Menu, Quit
-//TODO[javi]: PvP / PvAI
 //TODO[javi]: sound effects
 
 /* Game state updates */
 
 func init_game() GameState {
 	return GameState{
-		LeftPaddle:    InitialLeftPaddle,
-		RightPaddle:   InitialRightPaddle,
-		Ball:          InitialBall,
-		BallDirection: vec2_from_angle(Random.Float64()),
-		LeftScore:     0,
-		RightScore:    0,
-		Update:        menu_update,
-		Render:        menu_render,
-		Running:       true,
+		Update:  menu_update,
+		Render:  menu_render,
+		Running: true,
+
+		LeftPaddle:       InitialLeftPaddle,
+		RightPaddle:      InitialRightPaddle,
+		Ball:             InitialBall,
+		BallDirection:    vec2_from_angle(Random.Float64()),
+		LeftScore:        0,
+		RightScore:       0,
+		LeftInput:        left_player_input,
+		LeftPlayerHuman:  true,
+		RightInput:       right_ai_input,
+		RightPlayerHuman: false,
 
 		SelectedOption: 0,
 		MenuOptions: [3]MenuOptionData{
