@@ -23,11 +23,29 @@ func pause_update(GS *GameState, DeltaTime float32) {
 func pause_render(GS *GameState) {
 	draw_paddles_ball_and_score(GS)
 
+	const OptionFontSize int32 = 45
+	const BorderMargins = 10
+	const DeltaY int32 = OptionFontSize * 2
+	var CenterPosition rl.Vector2 = rl.Vector2{
+		X: float32(WindowWidth) / 2.0,
+		Y: float32(WindowHeight) / 2.0}
+	var NumOptions int32 = int32(len(GS.PauseMenuOptions))
+	var ContentHeight int32 = NumOptions*OptionFontSize + (NumOptions-1)*DeltaY + 2*BorderMargins
+
+	// Menu Borders
+	var ContentWidth float32 = 250.0
+	var BorderRectangle rl.Rectangle = rl.Rectangle{
+		X:      CenterPosition.X - ContentWidth/2,
+		Y:      CenterPosition.Y - float32(ContentHeight)/2.0,
+		Width:  ContentWidth,
+		Height: float32(ContentHeight)}
+
+	draw_rect(&BorderRectangle, rl.Black)
+	rl.DrawRectangleLinesEx(BorderRectangle, 1.0, rl.White)
+
 	// Menu options
 	{
-		const OptionFontSize int32 = 45
-		var YPosition int32 = WindowHeight / 2
-		const DeltaY int32 = OptionFontSize * 2
+		var YPosition int32 = int32(BorderRectangle.Y) + BorderMargins + OptionFontSize/2
 		for i := 0; i < len(GS.PauseMenuOptions); i++ {
 			var TitleWidth int32 = rl.MeasureText(GS.PauseMenuOptions[i].Name, OptionFontSize)
 			var OptionColor rl.Color = rl.Gray
@@ -35,6 +53,7 @@ func pause_render(GS *GameState) {
 				OptionColor = rl.White
 			}
 			rl.DrawText(GS.PauseMenuOptions[i].Name, (WindowWidth-TitleWidth)/2, YPosition, OptionFontSize, OptionColor)
+			//rl.DrawRectangleLines((WindowWidth-TitleWidth)/2, YPosition, TitleWidth, OptionFontSize, rl.Red)
 			YPosition += DeltaY
 		}
 	}
