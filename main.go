@@ -30,8 +30,8 @@ func init_game() GameState {
 		RightPlayerHuman:        false,
 		SelectedPauseMenuOption: 0,
 		PauseMenuOptions: [2]MenuOptionData{
-			{Name: "Continue", Callback: nil},
-			{Name: "Quit", Callback: nil},
+			{Name: "Continue", Callback: on_continue},
+			{Name: "Quit", Callback: on_return_to_main_menu},
 		},
 
 		SelectedMainMenuOption: 0,
