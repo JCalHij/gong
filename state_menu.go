@@ -53,7 +53,7 @@ func on_player_vs_ai(GS *GameState) {
 }
 
 func on_player_vs_player(GS *GameState) {
-
+	change_to_idle(GS)
 }
 
 func on_quit(GS *GameState) {
