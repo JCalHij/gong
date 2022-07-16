@@ -27,11 +27,13 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 		// Collision checks
 		// Top & Bottom Window limits
 		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
+			play_sound(SFX_WallHit)
 			GS.BallDirection.Y *= -1
 		}
 		// Left and right limits
 		if BallNewPos.X+BallWidth >= float32(WindowWidth) {
 			// Ball touched right side of the screen. Point for the left side.
+			play_sound(SFX_Goal)
 			GS.LeftScore += 1
 			reset_positions(GS)
 			if GS.LeftScore >= GameWonScore {
@@ -43,6 +45,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			}
 		} else if BallNewPos.X <= 0.0 {
 			// Ball touched left side of the screen. Point for the right side.
+			play_sound(SFX_Goal)
 			GS.RightScore += 1
 			reset_positions(GS)
 			if GS.RightScore >= GameWonScore {
@@ -62,6 +65,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 
 		// Left paddle
 		if rl.CheckCollisionRecs(GS.LeftPaddle, NewBallRect) {
+			play_sound(SFX_PaddleHit)
 			switch rect_collision_side(&GS.LeftPaddle, &GS.Ball) {
 			case TopCollision, BottomCollision:
 				{
@@ -86,6 +90,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 		}
 		// Right paddle
 		if rl.CheckCollisionRecs(GS.RightPaddle, NewBallRect) {
+			play_sound(SFX_PaddleHit)
 			switch rect_collision_side(&GS.RightPaddle, &GS.Ball) {
 			case TopCollision, BottomCollision:
 				{
