@@ -42,6 +42,9 @@ type GameState struct {
 	LeftScore  int32
 	RightScore int32
 
+	SelectedPauseMenuOption int
+	PauseMenuOptions        [2]MenuOptionData
+
 	// Menu stuff
 
 	SelectedMainMenuOption int
