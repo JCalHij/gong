@@ -7,7 +7,6 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: In-game pause menu -> Continue, Main Menu, Quit
 //TODO[javi]: sound effects
 
 /* Game state updates */
