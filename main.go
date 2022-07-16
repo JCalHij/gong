@@ -22,7 +22,9 @@ func init_game() GameState {
 		LeftScore:     0,
 		RightScore:    0,
 		Update:        menu_update,
-		Render:        menu_render}
+		Render:        menu_render,
+
+		SelectedOption: 0}
 }
 
 func reset_positions(GS *GameState) {

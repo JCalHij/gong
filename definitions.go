@@ -21,6 +21,10 @@ type GameState struct {
 
 	Update UpdateFunction
 	Render RenderFunction
+
+	// Menu stuff
+
+	SelectedOption int
 }
 
 const PaddleWidth = 15
