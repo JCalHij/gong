@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/gen2brain/raylib-go/raylib"
@@ -59,9 +60,15 @@ func change_to_finished(GS *GameState) {
 }
 
 func change_to_menu(GS *GameState) {
-	GS.SelectedOption = 0
+	GS.SelectedMainMenuOption = 0
 	GS.Update = menu_update
 	GS.Render = menu_render
+}
+
+func change_to_pause(GS *GameState) {
+	GS.SelectedPauseMenuOption = 0
+	GS.Update = pause_update
+	GS.Render = pause_render
 }
 
 func restart_game(GS *GameState) {
@@ -75,4 +82,22 @@ func reset_positions(GS *GameState) {
 	GS.RightPaddle = InitialRightPaddle
 	GS.Ball = InitialBall
 	GS.BallDirection = vec2_from_angle(Random.Float64())
+}
+
+func draw_paddles_ball_and_score(GS *GameState) {
+	// Paddles
+	draw_rect(&GS.LeftPaddle, rl.White)
+	draw_rect(&GS.RightPaddle, rl.White)
+	// Ball
+	draw_rect(&GS.Ball, rl.White)
+
+	// Score
+	{
+		RightScoreText := fmt.Sprintf("%d", GS.RightScore)
+		var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
+
+		LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
+		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
+		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+	}
 }

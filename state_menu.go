@@ -6,19 +6,19 @@ import (
 
 func menu_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeyS) || rl.IsKeyPressed(rl.KeyDown) {
-		GS.SelectedOption += 1
-		if GS.SelectedOption >= len(GS.MenuOptions) {
-			GS.SelectedOption = 0
+		GS.SelectedMainMenuOption += 1
+		if GS.SelectedMainMenuOption >= len(GS.MainMenuOptions) {
+			GS.SelectedMainMenuOption = 0
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyW) || rl.IsKeyPressed(rl.KeyUp) {
-		GS.SelectedOption -= 1
-		if GS.SelectedOption < 0 {
-			GS.SelectedOption = len(GS.MenuOptions) - 1
+		GS.SelectedMainMenuOption -= 1
+		if GS.SelectedMainMenuOption < 0 {
+			GS.SelectedMainMenuOption = len(GS.MainMenuOptions) - 1
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyEnter) {
-		GS.MenuOptions[GS.SelectedOption].Callback(GS)
+		GS.MainMenuOptions[GS.SelectedMainMenuOption].Callback(GS)
 	}
 }
 
@@ -36,13 +36,13 @@ func menu_render(GS *GameState) {
 		const OptionFontSize int32 = 45
 		var YPosition int32 = WindowHeight / 2
 		const DeltaY int32 = OptionFontSize * 2
-		for i := 0; i < len(GS.MenuOptions); i++ {
-			var TitleWidth int32 = rl.MeasureText(GS.MenuOptions[i].Name, OptionFontSize)
+		for i := 0; i < len(GS.MainMenuOptions); i++ {
+			var TitleWidth int32 = rl.MeasureText(GS.MainMenuOptions[i].Name, OptionFontSize)
 			var OptionColor rl.Color = rl.Gray
-			if GS.SelectedOption == i {
+			if GS.SelectedMainMenuOption == i {
 				OptionColor = rl.White
 			}
-			rl.DrawText(GS.MenuOptions[i].Name, (WindowWidth-TitleWidth)/2, YPosition, OptionFontSize, OptionColor)
+			rl.DrawText(GS.MainMenuOptions[i].Name, (WindowWidth-TitleWidth)/2, YPosition, OptionFontSize, OptionColor)
 			YPosition += DeltaY
 		}
 	}
