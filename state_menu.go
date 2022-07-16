@@ -25,7 +25,11 @@ func menu_render(GS *GameState) {
 		const DeltaY int32 = OptionFontSize * 2
 		for i := 0; i < len(MenuOptions); i++ {
 			var TitleWidth int32 = rl.MeasureText(MenuOptions[i], OptionFontSize)
-			rl.DrawText(MenuOptions[i], (WindowWidth-TitleWidth)/2, YPosition, OptionFontSize, rl.White)
+			var OptionColor rl.Color = rl.Gray
+			if GS.SelectedOption == i {
+				OptionColor = rl.White
+			}
+			rl.DrawText(MenuOptions[i], (WindowWidth-TitleWidth)/2, YPosition, OptionFontSize, OptionColor)
 			YPosition += DeltaY
 		}
 	}
