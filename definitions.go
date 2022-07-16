@@ -71,6 +71,26 @@ const (
 	RightCollision  = iota
 )
 
+//Sounds
+const (
+	SFX_PaddleHit    = iota
+	SFX_WallHit      = iota
+	SF_Goal          = iota
+	SFX_OptionMove   = iota
+	SFX_OptionSelect = iota
+	SFX_MAX          = iota
+)
+
+var SFX_Resources [SFX_MAX]string = [SFX_MAX]string{
+	"assets/ball_paddle_hits.wav",
+	"assets/wall_hit.wav",
+	"assets/goat.wav",
+	"assets/option_move.wav",
+	"assets/option_selected.wav",
+}
+
+var SFX_Sounds [SFX_MAX]rl.Sound
+
 var Random *rand.Rand
 
 var InitialLeftPaddle rl.Rectangle = rl.Rectangle{
