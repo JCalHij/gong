@@ -101,3 +101,7 @@ func draw_paddles_ball_and_score(GS *GameState) {
 		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
 	}
 }
+
+func play_sound(SfxEnum int) {
+	rl.PlaySound(SFX_Sounds[SfxEnum])
+}
