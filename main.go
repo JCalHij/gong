@@ -9,7 +9,6 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: Handle weird side collisions
 //TODO[javi]: "Unpredictable" ball movement
 //TODO[javi]: 1-2 Players
 //TODO[javi]: Pause menu -> Restart, Continue, Quit
@@ -145,11 +144,97 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			Height: GS.Ball.Height}
 
 		if rl.CheckCollisionRecs(GS.LeftPaddle, NewBallRect) {
-			GS.BallDirection.X *= -1
+			// Left player collided with ball, but how?
+			if GS.Ball.Y+GS.Ball.Height >= GS.LeftPaddle.Y && GS.Ball.Y <= GS.LeftPaddle.Y+GS.LeftPaddle.Height {
+				// Frontal hit (region 1)
+				GS.BallDirection.X *= -1
+			} else if GS.Ball.X <= GS.LeftPaddle.X+GS.LeftPaddle.Width {
+				// Ball has already passed the paddle, it will hit on the tips - Lateral hit (region 2)
+				GS.BallDirection.Y *= -1
+			} else {
+				// Corner cases (region 3)
+				// Here we need to calculate properly the collision point, but we will simplify it by
+				// taking different behaviors depending on which half of the region the ball was
+				if GS.Ball.Y < GS.LeftPaddle.Y {
+					// Top region 3
+					var RegionOrigin rl.Vector2 = rl.Vector2{
+						X: GS.LeftPaddle.X + GS.LeftPaddle.Width,
+						Y: GS.LeftPaddle.Y - GS.Ball.Height}
+					var BallPos_region rl.Vector2 = rl.Vector2{
+						X: GS.Ball.X - RegionOrigin.X,
+						Y: GS.Ball.Y - RegionOrigin.Y}
+					if rl.Vector2Angle(BallPos_region, rl.Vector2{X: 1, Y: 0}) <= math.Pi/4.0 {
+						// Subregion 3, which is on the side of region 1
+						GS.BallDirection.X *= -1
+					} else {
+						// Subregion 3 which is on the side of region 2
+						GS.BallDirection.Y *= -1
+					}
+				} else {
+					// Bottom region 3
+					// Top region 3
+					var RegionOrigin rl.Vector2 = rl.Vector2{
+						X: GS.LeftPaddle.X + GS.LeftPaddle.Width,
+						Y: GS.LeftPaddle.Y + GS.LeftPaddle.Height + GS.Ball.Height}
+					var BallPos_region rl.Vector2 = rl.Vector2{
+						X: GS.Ball.X - RegionOrigin.X,
+						Y: GS.Ball.Y - RegionOrigin.Y}
+					if rl.Vector2Angle(BallPos_region, rl.Vector2{X: 1, Y: 0}) <= math.Pi/4.0 {
+						// Subregion 3, which is on the side of region 1
+						GS.BallDirection.X *= -1
+					} else {
+						// Subregion 3 which is on the side of region 2
+						GS.BallDirection.Y *= -1
+					}
+				}
+			}
 		}
 		// Right paddle
 		if rl.CheckCollisionRecs(GS.RightPaddle, NewBallRect) {
-			GS.BallDirection.X *= -1
+			// Right player collided with ball, but how?
+			if GS.Ball.Y+GS.Ball.Height >= GS.RightPaddle.Y && GS.Ball.Y <= GS.RightPaddle.Y+GS.RightPaddle.Height {
+				// Frontal hit (region 1)
+				GS.BallDirection.X *= -1
+			} else if GS.Ball.X-GS.Ball.Width >= GS.RightPaddle.X {
+				// Ball has already passed the paddle, it will hit on the tips - Lateral hit (region 2)
+				GS.BallDirection.Y *= -1
+			} else {
+				// Corner cases (region 3)
+				// Here we need to calculate properly the collision point, but we will simplify it by
+				// taking different behaviors depending on which half of the region the ball was
+				if GS.Ball.Y < GS.RightPaddle.Y {
+					// Top region 3
+					var RegionOrigin rl.Vector2 = rl.Vector2{
+						X: GS.RightPaddle.X,
+						Y: GS.RightPaddle.Y - GS.Ball.Height}
+					var BallPos_region rl.Vector2 = rl.Vector2{
+						X: GS.Ball.X - RegionOrigin.X,
+						Y: GS.Ball.Y - RegionOrigin.Y}
+					if rl.Vector2Angle(BallPos_region, rl.Vector2{X: -1, Y: 0}) <= math.Pi/4.0 {
+						// Subregion 3, which is on the side of region 1
+						GS.BallDirection.X *= -1
+					} else {
+						// Subregion 3 which is on the side of region 2
+						GS.BallDirection.Y *= -1
+					}
+				} else {
+					// Bottom region 3
+					// Top region 3
+					var RegionOrigin rl.Vector2 = rl.Vector2{
+						X: GS.RightPaddle.X,
+						Y: GS.RightPaddle.Y + GS.RightPaddle.Height + GS.Ball.Height}
+					var BallPos_region rl.Vector2 = rl.Vector2{
+						X: GS.Ball.X - RegionOrigin.X,
+						Y: GS.Ball.Y - RegionOrigin.Y}
+					if rl.Vector2Angle(BallPos_region, rl.Vector2{X: -1, Y: 0}) <= math.Pi/4.0 {
+						// Subregion 3, which is on the side of region 1
+						GS.BallDirection.X *= -1
+					} else {
+						// Subregion 3 which is on the side of region 2
+						GS.BallDirection.Y *= -1
+					}
+				}
+			}
 		}
 
 		GS.Ball.X += BallSpeed * GS.BallDirection.X * DeltaTime
