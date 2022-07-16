@@ -12,6 +12,12 @@ import (
 /* Game state updates */
 
 func init_game() GameState {
+	rl.InitAudioDevice()
+	for i := 0; i < SFX_MAX; i++ {
+		SFX_Sounds[i] = rl.LoadSound(SFX_Resources[i])
+	}
+	rl.SetMasterVolume(0.75)
+
 	return GameState{
 		Update:  menu_update,
 		Render:  menu_render,

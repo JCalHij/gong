@@ -4,18 +4,21 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 
 func pause_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeyS) || rl.IsKeyPressed(rl.KeyDown) {
+		play_sound(SFX_OptionMove)
 		GS.SelectedPauseMenuOption += 1
 		if GS.SelectedPauseMenuOption >= len(GS.PauseMenuOptions) {
 			GS.SelectedPauseMenuOption = 0
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyW) || rl.IsKeyPressed(rl.KeyUp) {
+		play_sound(SFX_OptionMove)
 		GS.SelectedPauseMenuOption -= 1
 		if GS.SelectedPauseMenuOption < 0 {
 			GS.SelectedPauseMenuOption = len(GS.PauseMenuOptions) - 1
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyEnter) {
+		play_sound(SFX_OptionSelect)
 		GS.PauseMenuOptions[GS.SelectedPauseMenuOption].Callback(GS)
 	}
 }

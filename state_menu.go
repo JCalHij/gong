@@ -6,18 +6,21 @@ import (
 
 func menu_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeyS) || rl.IsKeyPressed(rl.KeyDown) {
+		play_sound(SFX_OptionMove)
 		GS.SelectedMainMenuOption += 1
 		if GS.SelectedMainMenuOption >= len(GS.MainMenuOptions) {
 			GS.SelectedMainMenuOption = 0
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyW) || rl.IsKeyPressed(rl.KeyUp) {
+		play_sound(SFX_OptionMove)
 		GS.SelectedMainMenuOption -= 1
 		if GS.SelectedMainMenuOption < 0 {
 			GS.SelectedMainMenuOption = len(GS.MainMenuOptions) - 1
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyEnter) {
+		play_sound(SFX_OptionSelect)
 		GS.MainMenuOptions[GS.SelectedMainMenuOption].Callback(GS)
 	}
 }
