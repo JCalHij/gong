@@ -21,8 +21,8 @@ func init_game() GameState {
 		BallDirection: vec2_from_angle(Random.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
-		Update:        idle_game_update,
-		Render:        idle_game_render}
+		Update:        menu_update,
+		Render:        menu_render}
 }
 
 func reset_positions(GS *GameState) {
