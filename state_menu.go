@@ -49,10 +49,14 @@ func menu_render(GS *GameState) {
 }
 
 func on_player_vs_ai(GS *GameState) {
+	GS.LeftInput = left_player_input
+	GS.RightInput = right_ai_input
 	change_to_idle(GS)
 }
 
 func on_player_vs_player(GS *GameState) {
+	GS.LeftInput = left_player_input
+	GS.RightInput = right_player_input
 	change_to_idle(GS)
 }
 
