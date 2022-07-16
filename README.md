@@ -2,6 +2,8 @@
 
 Pong, but in `go`. Therefore, `gong`.
 
+![](releases/itch/cover.png)
+
 
 ## But why?
 
@@ -18,3 +20,7 @@ go run main.go
 # To create a binary file
 go build main.go
 ```
+
+## Credits
+
+Sound effects generated with `SFXIA`: https://rxi.itch.io/sfxia
