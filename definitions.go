@@ -82,9 +82,9 @@ const (
 )
 
 var SFX_Resources [SFX_MAX]string = [SFX_MAX]string{
-	"assets/ball_paddle_hits.wav",
+	"assets/ball_paddle_hit.wav",
 	"assets/wall_hit.wav",
-	"assets/goat.wav",
+	"assets/goal.wav",
 	"assets/option_move.wav",
 	"assets/option_selected.wav",
 }
