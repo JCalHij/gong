@@ -29,7 +29,7 @@ func init_game() GameState {
 		RightInput:       right_ai_input,
 		RightPlayerHuman: false,
 
-		SelectedOption: 0,
+		SelectedMainMenuOption: 0,
 		MainMenuOptions: [3]MenuOptionData{
 			{Name: "Player vs AI", Callback: on_player_vs_ai},
 			{Name: "Player vs Player", Callback: on_player_vs_player},

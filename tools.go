@@ -60,7 +60,7 @@ func change_to_finished(GS *GameState) {
 }
 
 func change_to_menu(GS *GameState) {
-	GS.SelectedOption = 0
+	GS.SelectedMainMenuOption = 0
 	GS.Update = menu_update
 	GS.Render = menu_render
 }
