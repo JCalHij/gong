@@ -16,6 +16,7 @@ func init_game() GameState {
 	for i := 0; i < SFX_MAX; i++ {
 		SFX_Sounds[i] = rl.LoadSound(SFX_Resources[i])
 	}
+	rl.SetMasterVolume(0.75)
 
 	return GameState{
 		Update:  menu_update,
