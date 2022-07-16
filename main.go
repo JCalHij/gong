@@ -267,7 +267,7 @@ func main() {
 			GS.Render(&GS)
 
 			// Debug performance
-			rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
+			// rl.DrawText(fmt.Sprintf("%.03f ms", DeltaTime*1000), 10, 10, 25, rl.Red)
 
 			rl.EndDrawing()
 		}
