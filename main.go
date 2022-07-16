@@ -9,6 +9,11 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
+//TODO[javi]: Handle weird side collisions
+//TODO[javi]: "Unpredictable" ball movement
+//TODO[javi]: 1-2 Players
+//TODO[javi]: Pause menu -> Restart, Continue, Quit
+
 /* Definitions, Constants */
 
 type UpdateFunction func(*GameState, float32)
@@ -98,7 +103,6 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			Y: BallSpeed * GS.BallDirection.Y * DeltaTime}
 		var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
 
-		//TODO[javi]: Handle weird side collisions
 		// Collision checks
 		//Top & Bottom Window limits
 		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
