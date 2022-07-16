@@ -48,12 +48,10 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			reset_positions(GS)
 			if GS.LeftScore >= GameWonScore {
 				// Reached maximum points, you win
-				GS.Update = finished_game_update
-				GS.Render = finished_game_render
+				change_to_finished(GS)
 			} else {
 				// Not yet finished, keep playing
-				GS.Update = idle_game_update
-				GS.Render = idle_game_render
+				change_to_idle(GS)
 			}
 		} else if BallNewPos.X <= 0.0 {
 			// Ball touched left side of the screen. Point for the right side.
@@ -61,12 +59,10 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			reset_positions(GS)
 			if GS.RightScore >= GameWonScore {
 				// Reached maximum points, you win
-				GS.Update = finished_game_update
-				GS.Render = finished_game_render
+				change_to_finished(GS)
 			} else {
 				// Not yet finished, keep playing
-				GS.Update = idle_game_update
-				GS.Render = idle_game_render
+				change_to_idle(GS)
 			}
 		}
 

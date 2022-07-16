@@ -42,3 +42,23 @@ func rect_collision_side(Target *rl.Rectangle, Mover *rl.Rectangle) int32 {
 		return BottomCollision
 	}
 }
+
+func change_to_idle(GS *GameState) {
+	GS.Update = idle_game_update
+	GS.Render = idle_game_render
+}
+
+func change_to_playing(GS *GameState) {
+	GS.Update = playing_game_update
+	GS.Render = playing_game_render
+}
+
+func change_to_finished(GS *GameState) {
+	GS.Update = finished_game_update
+	GS.Render = finished_game_render
+}
+
+func change_to_menu(GS *GameState) {
+	GS.Update = menu_update
+	GS.Render = menu_render
+}

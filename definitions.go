@@ -9,6 +9,13 @@ import (
 type UpdateFunction func(*GameState, float32)
 type RenderFunction func(*GameState)
 
+type OptionSelectedCallback func(*GameState)
+
+type MenuOptionData struct {
+	Name     string
+	Callback OptionSelectedCallback
+}
+
 type GameState struct {
 	LeftPaddle  rl.Rectangle
 	RightPaddle rl.Rectangle
@@ -27,6 +34,7 @@ type GameState struct {
 	// Menu stuff
 
 	SelectedOption int
+	MenuOptions    [3]MenuOptionData
 }
 
 const PaddleWidth = 15

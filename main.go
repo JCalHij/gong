@@ -25,7 +25,12 @@ func init_game() GameState {
 		Render:        menu_render,
 		Running:       true,
 
-		SelectedOption: 0}
+		SelectedOption: 0,
+		MenuOptions: [3]MenuOptionData{
+			{Name: "Player vs AI", Callback: on_player_vs_ai},
+			{Name: "Player vs Player", Callback: on_player_vs_player},
+			{Name: "Quit", Callback: on_quit},
+		}}
 }
 
 func reset_positions(GS *GameState) {

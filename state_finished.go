@@ -9,8 +9,7 @@ import (
 func finished_game_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeySpace) {
 		*GS = init_game()
-		GS.Update = idle_game_update
-		GS.Render = idle_game_render
+		change_to_idle(GS)
 	}
 }
 

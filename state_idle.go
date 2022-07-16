@@ -8,8 +8,7 @@ import (
 
 func idle_game_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeySpace) {
-		GS.Update = playing_game_update
-		GS.Render = playing_game_render
+		change_to_playing(GS)
 	}
 }
 
