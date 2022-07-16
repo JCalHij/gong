@@ -9,6 +9,7 @@ import (
 
 //TODO[javi]: In-game pause menu -> Continue, Main Menu, Quit
 //TODO[javi]: PvP / PvAI
+//TODO[javi]: sound effects
 
 /* Game state updates */
 
