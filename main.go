@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: "Main menu" -> PvP, PvAI or Quit
 //TODO[javi]: In-game pause menu -> Continue, Main Menu, Quit
 //TODO[javi]: PvP / PvAI
 
@@ -22,15 +20,16 @@ func init_game() GameState {
 		BallDirection: vec2_from_angle(Random.Float64()),
 		LeftScore:     0,
 		RightScore:    0,
-		Update:        idle_game_update,
-		Render:        idle_game_render}
-}
+		Update:        menu_update,
+		Render:        menu_render,
+		Running:       true,
 
-func reset_positions(GS *GameState) {
-	GS.LeftPaddle = InitialLeftPaddle
-	GS.RightPaddle = InitialRightPaddle
-	GS.Ball = InitialBall
-	GS.BallDirection = vec2_from_angle(Random.Float64())
+		SelectedOption: 0,
+		MenuOptions: [3]MenuOptionData{
+			{Name: "Player vs AI", Callback: on_player_vs_ai},
+			{Name: "Player vs Player", Callback: on_player_vs_player},
+			{Name: "Quit", Callback: on_quit},
+		}}
 }
 
 /* Entry Point */
@@ -39,11 +38,12 @@ func main() {
 	var RandSource = rand.NewSource(time.Now().UnixNano())
 	Random = rand.New(RandSource)
 	rl.InitWindow(WindowWidth, WindowHeight, "gong")
+	rl.SetExitKey(0)
 
 	//rl.SetTargetFPS(60)
 	var GS GameState = init_game()
 
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && GS.Running {
 		var DeltaTime float32 = rl.GetFrameTime() // [s] frame time
 
 		/* Game Logic */
@@ -53,22 +53,6 @@ func main() {
 		{
 			rl.BeginDrawing()
 			rl.ClearBackground(rl.Black)
-
-			// Paddles
-			draw_rect(&GS.LeftPaddle, rl.White)
-			draw_rect(&GS.RightPaddle, rl.White)
-			// Ball
-			draw_rect(&GS.Ball, rl.White)
-
-			// Score
-			{
-				RightScoreText := fmt.Sprintf("%d", GS.RightScore)
-				var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
-
-				LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
-				rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
-				rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
-			}
 
 			GS.Render(&GS)
 

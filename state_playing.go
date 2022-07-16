@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/gen2brain/raylib-go/raylib"
@@ -47,12 +48,10 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			reset_positions(GS)
 			if GS.LeftScore >= GameWonScore {
 				// Reached maximum points, you win
-				GS.Update = finished_game_update
-				GS.Render = finished_game_render
+				change_to_finished(GS)
 			} else {
 				// Not yet finished, keep playing
-				GS.Update = idle_game_update
-				GS.Render = idle_game_render
+				change_to_idle(GS)
 			}
 		} else if BallNewPos.X <= 0.0 {
 			// Ball touched left side of the screen. Point for the right side.
@@ -60,12 +59,10 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			reset_positions(GS)
 			if GS.RightScore >= GameWonScore {
 				// Reached maximum points, you win
-				GS.Update = finished_game_update
-				GS.Render = finished_game_render
+				change_to_finished(GS)
 			} else {
 				// Not yet finished, keep playing
-				GS.Update = idle_game_update
-				GS.Render = idle_game_render
+				change_to_idle(GS)
 			}
 		}
 
@@ -131,5 +128,19 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 }
 
 func playing_game_render(GS *GameState) {
+	// Paddles
+	draw_rect(&GS.LeftPaddle, rl.White)
+	draw_rect(&GS.RightPaddle, rl.White)
+	// Ball
+	draw_rect(&GS.Ball, rl.White)
 
+	// Score
+	{
+		RightScoreText := fmt.Sprintf("%d", GS.RightScore)
+		var RightTextWidth = rl.MeasureText(RightScoreText, ScoreFontSize)
+
+		LeftScoreText := fmt.Sprintf("%d", GS.LeftScore)
+		rl.DrawText(LeftScoreText, WindowWidth/2.0-TextScoreSpacing-RightTextWidth, 10, ScoreFontSize, rl.White)
+		rl.DrawText(RightScoreText, WindowWidth/2.0+TextScoreSpacing, 10, ScoreFontSize, rl.White)
+	}
 }
