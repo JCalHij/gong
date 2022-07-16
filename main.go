@@ -9,7 +9,6 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-//TODO[javi]: "Unpredictable" ball movement
 //TODO[javi]: PvP / PvAI
 //TODO[javi]: Pause menu -> Restart, Continue, Quit
 
@@ -111,7 +110,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 		var BallNewPos = rl.Vector2Add(BallPos, BallDeltaMovement)
 
 		// Collision checks
-		//Top & Bottom Window limits
+		// Top & Bottom Window limits
 		if BallNewPos.Y+BallHeight >= float32(WindowHeight) || BallNewPos.Y <= 0.0 {
 			GS.BallDirection.Y *= -1
 		}
@@ -144,22 +143,33 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			}
 		}
 
-		// Left paddle
 		var NewBallRect rl.Rectangle = rl.Rectangle{
 			X:      BallNewPos.X,
 			Y:      BallNewPos.Y,
 			Width:  GS.Ball.Width,
 			Height: GS.Ball.Height}
 
+		// Left paddle
 		if rl.CheckCollisionRecs(GS.LeftPaddle, NewBallRect) {
 			switch rect_collision_side(&GS.LeftPaddle, &GS.Ball) {
 			case TopCollision, BottomCollision:
 				{
 					GS.BallDirection.Y *= -1
 				}
-			case LeftCollision, RightCollision:
+			case LeftCollision:
 				{
 					GS.BallDirection.X *= -1
+				}
+			case RightCollision:
+				{
+					// Ball direction changes depending on where the ball was
+					var MinPos float32 = GS.LeftPaddle.Y - GS.Ball.Height
+					var MaxPos float32 = GS.LeftPaddle.Y + GS.LeftPaddle.Height
+					var t float32 = (GS.Ball.Y - MinPos) / (MaxPos - MinPos)
+					const MinAngle float32 = -math.Pi / 3 // [rad] -60 degrees
+					const MaxAngle float32 = math.Pi / 3  // [rad] 60 degrees
+					var NewBallAngle float32 = MinAngle*(1-t) + MaxAngle*t
+					GS.BallDirection = vec2_from_angle(float64(NewBallAngle))
 				}
 			}
 		}
@@ -170,9 +180,20 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 				{
 					GS.BallDirection.Y *= -1
 				}
-			case LeftCollision, RightCollision:
+			case RightCollision:
 				{
 					GS.BallDirection.X *= -1
+				}
+			case LeftCollision:
+				{
+					// Ball direction changes depending on where the ball was
+					var MinPos float32 = GS.RightPaddle.Y - GS.Ball.Height
+					var MaxPos float32 = GS.RightPaddle.Y + GS.RightPaddle.Height
+					var t float32 = (GS.Ball.Y - MinPos) / (MaxPos - MinPos)
+					const MinAngle float32 = math.Pi - math.Pi/3 // [rad] 180 - 60 degrees
+					const MaxAngle float32 = math.Pi + math.Pi/3 // [rad] 180 + 60 degrees
+					var NewBallAngle float32 = MinAngle*(1-t) + MaxAngle*t
+					GS.BallDirection = vec2_from_angle(float64(NewBallAngle))
 				}
 			}
 		}
