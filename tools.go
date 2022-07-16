@@ -75,13 +75,30 @@ func restart_game(GS *GameState) {
 	reset_positions(GS)
 	GS.LeftScore = 0
 	GS.RightScore = 0
+	// Choose ball direction
+	if Random.Float32() <= 0.5 {
+		throw_ball_left(GS)
+	} else {
+		throw_ball_right(GS)
+	}
+}
+
+func throw_ball_right(GS *GameState) {
+	const MinAngle float32 = -45 * math.Pi / 180
+	const MaxAngle float32 = 45 * math.Pi / 180
+	GS.BallDirection = vec2_from_angle(float64(random_range(MinAngle, MaxAngle)))
+}
+
+func throw_ball_left(GS *GameState) {
+	const MinAngle float32 = 135 * math.Pi / 180
+	const MaxAngle float32 = 225 * math.Pi / 180
+	GS.BallDirection = vec2_from_angle(float64(random_range(MinAngle, MaxAngle)))
 }
 
 func reset_positions(GS *GameState) {
 	GS.LeftPaddle = InitialLeftPaddle
 	GS.RightPaddle = InitialRightPaddle
 	GS.Ball = InitialBall
-	GS.BallDirection = vec2_from_angle(Random.Float64())
 }
 
 func draw_paddles_ball_and_score(GS *GameState) {
@@ -104,4 +121,8 @@ func draw_paddles_ball_and_score(GS *GameState) {
 
 func play_sound(SfxEnum int) {
 	rl.PlaySound(SFX_Sounds[SfxEnum])
+}
+
+func random_range(Min float32, Max float32) float32 {
+	return Min + (Max-Min)*Random.Float32()
 }

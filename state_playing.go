@@ -36,6 +36,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			play_sound(SFX_Goal)
 			GS.LeftScore += 1
 			reset_positions(GS)
+			throw_ball_right(GS)
 			if GS.LeftScore >= GameWonScore {
 				// Reached maximum points, you win
 				change_to_finished(GS)
@@ -48,6 +49,7 @@ func playing_game_update(GS *GameState, DeltaTime float32) {
 			play_sound(SFX_Goal)
 			GS.RightScore += 1
 			reset_positions(GS)
+			throw_ball_left(GS)
 			if GS.RightScore >= GameWonScore {
 				// Reached maximum points, you win
 				change_to_finished(GS)

@@ -7,6 +7,8 @@ import (
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
+//TODO[javi]: Fix PvP end screen
+
 /* Game state updates */
 
 func init_game() GameState {
@@ -24,7 +26,7 @@ func init_game() GameState {
 		LeftPaddle:              InitialLeftPaddle,
 		RightPaddle:             InitialRightPaddle,
 		Ball:                    InitialBall,
-		BallDirection:           vec2_from_angle(Random.Float64()),
+		BallDirection:           vec2_from_angle(0),
 		LeftScore:               0,
 		RightScore:              0,
 		LeftInput:               left_player_input,
@@ -55,6 +57,7 @@ func main() {
 
 	//rl.SetTargetFPS(60)
 	var GS GameState = init_game()
+	restart_game(&GS)
 
 	for !rl.WindowShouldClose() && GS.Running {
 		var DeltaTime float32 = rl.GetFrameTime() // [s] frame time
