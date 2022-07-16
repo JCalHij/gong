@@ -10,7 +10,7 @@ import (
 )
 
 //TODO[javi]: "Unpredictable" ball movement
-//TODO[javi]: 1-2 Players
+//TODO[javi]: PvP / PvAI
 //TODO[javi]: Pause menu -> Restart, Continue, Quit
 
 /* Definitions, Constants */
