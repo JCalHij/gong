@@ -6,7 +6,7 @@
 		}
     ],
     "settings": {
-        
+
     },
     "launch": {
         "configurations": [
@@ -23,5 +23,10 @@
     "tasks": {
         "version": "2.0.0",
         "tasks": []
+    },
+    "extensions": {
+        "recommendations": [
+            "golang.go"
+        ]
     }
 }
