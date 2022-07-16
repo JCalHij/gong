@@ -8,8 +8,10 @@ import (
 
 func finished_game_update(GS *GameState, DeltaTime float32) {
 	if rl.IsKeyPressed(rl.KeySpace) {
-		*GS = init_game()
-		change_to_idle(GS)
+		restart_game(GS)
+	}
+	if rl.IsKeyPressed(rl.KeyEscape) {
+		change_to_menu(GS)
 	}
 }
 
@@ -50,6 +52,9 @@ func finished_game_render(GS *GameState) {
 		const InstructionsFontSize = 30
 		TextString := "Press SPACE to start a new game"
 		TextWidth := rl.MeasureText(TextString, InstructionsFontSize)
-		rl.DrawText(TextString, (WindowWidth-TextWidth)/2, WindowHeight-80, InstructionsFontSize, rl.White)
+		rl.DrawText(TextString, (WindowWidth-TextWidth)/2, WindowHeight-120, InstructionsFontSize, rl.White)
+		TextString = "Press ESCAPE to go to the main menu"
+		TextWidth = rl.MeasureText(TextString, InstructionsFontSize)
+		rl.DrawText(TextString, (WindowWidth-TextWidth)/2, WindowHeight-70, InstructionsFontSize, rl.White)
 	}
 }
